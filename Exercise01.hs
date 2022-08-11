@@ -15,9 +15,9 @@ instance Monad m => Applicative (ReaderT r m) where
 
 instance Monad m => Monad (ReaderT r m) where
     return = pure
-    ReaderT a >>= f = ReaderT $ \r -> do
-        b <- a r
-        (runReaderT $ f b) r
+    ReaderT f >>= g = ReaderT $ \r -> do
+        b <- f r
+        (runReaderT $ g b) r
 
 instance MonadTrans (ReaderT r) where
     lift a = ReaderT $ const a
