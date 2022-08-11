@@ -1,31 +1,29 @@
 #!/usr/bin/env stack
 -- stack script --resolver lts-19.18 --package transformers
-import           Control.Monad.Trans.Maybe
-import           System.IO
+import           Control.Monad.Trans.Class      ( MonadTrans(lift) )
+import           Control.Monad.Trans.Maybe      ( MaybeT(..) )
+import           System.IO                      ( hFlush
+                                                , stdout
+                                                )
 import           Text.Read                      ( readMaybe )
 
-prompt :: Read a => String -> IO (Maybe a)
+prompt :: Read a => String -> MaybeT IO a
 prompt question = do
-    putStr question
-    putStr ": "
-    hFlush stdout
-    answer <- getLine
-    return $ readMaybe answer
+    lift $ putStr question
+    lift $ putStr ": "
+    lift $ hFlush stdout
+    answer <- lift getLine
+    MaybeT $ return $ readMaybe answer
 
-ageInYear :: IO (Maybe Int)
+ageInYear :: MaybeT IO Int
 ageInYear = do
-    mbirthYear <- prompt "Birth year"
-    case mbirthYear of
-        Nothing        -> return Nothing
-        Just birthYear -> do
-            mfutureYear <- prompt "Future year"
-            case mfutureYear of
-                Nothing         -> return Nothing
-                Just futureYear -> return $ Just $ futureYear - birthYear
+    birthYear  <- prompt "Birth year"
+    futureYear <- prompt "Future year"
+    return $ futureYear - birthYear
 
 main :: IO ()
 main = do
-    mage <- ageInYear
+    mage <- runMaybeT ageInYear
     case mage of
-        Nothing  -> putStrLn $ "Some problem with input, sorry"
+        Nothing  -> putStrLn "Some problem with input, sorry"
         Just age -> putStrLn $ "In that year, age will be: " ++ show age
