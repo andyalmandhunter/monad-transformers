@@ -7,18 +7,21 @@ import           System.IO                      ( hFlush
                                                 )
 import           Text.Read                      ( readMaybe )
 
-prompt :: Read a => String -> MaybeT IO a
+prompt :: Read a => String -> IO (Maybe a)
 prompt question = do
-    lift $ putStr question
-    lift $ putStr ": "
-    lift $ hFlush stdout
-    answer <- lift getLine
-    MaybeT $ return $ readMaybe answer
+    putStr question
+    putStr ": "
+    hFlush stdout
+    answer <- getLine
+    return $ readMaybe answer
+
+prompt' :: Read a => String -> MaybeT IO a
+prompt' = MaybeT . prompt
 
 ageInYear :: MaybeT IO Int
 ageInYear = do
-    birthYear  <- prompt "Birth year"
-    futureYear <- prompt "Future year"
+    birthYear  <- prompt' "Birth year"
+    futureYear <- prompt' "Future year"
     return $ futureYear - birthYear
 
 main :: IO ()
