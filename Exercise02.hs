@@ -2,7 +2,12 @@
 -- stack script --resolver lts-19.18 --package transformers
 
 foldTerminateM :: Monad m => (b -> a -> m (Either b b)) -> b -> [a] -> m b
-foldTerminateM = _
+foldTerminateM _ a []       = return a
+foldTerminateM f a (x : xs) = do
+    y <- f a x
+    case y of
+        Left  a' -> return a'
+        Right a' -> foldTerminateM f a' xs
 
 loudSumPositive :: [Int] -> IO Int
 loudSumPositive = foldTerminateM go 0
