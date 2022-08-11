@@ -1,6 +1,6 @@
 -- Does not compile
 #!/usr/bin/env stack
--- stack --resolver lts-12.21 script
+-- stack script --resolver lts-19.18 --package transformers
 import           Control.Monad.Reader
 import           Lens.Micro
 import           Lens.Micro.Mtl                 ( view ) -- hint :)

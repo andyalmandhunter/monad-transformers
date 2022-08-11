@@ -1,8 +1,8 @@
 -- Does not compile
-import           Control.Monad.IO.Class
 #!/usr/bin/env stack
--- stack --resolver lts-12.21 script
+-- stack script --resolver lts-19.18 --package transformers
 {-# LANGUAGE DeriveFunctor #-}
+import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Class
 import           Data.Functor.Identity
 

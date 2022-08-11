@@ -1,5 +1,5 @@
 #!/usr/bin/env stack
--- stack --resolver lts-12.21 script
+-- stack script --resolver lts-19.18 --package transformers
 
 foldTerminateM :: Monad m => (b -> a -> m (Either b b)) -> b -> [a] -> m b
 foldTerminateM = _
