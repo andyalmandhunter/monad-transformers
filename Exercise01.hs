@@ -20,7 +20,7 @@ instance Monad m => Monad (ReaderT r m) where
         (runReaderT $ g b) r
 
 instance MonadTrans (ReaderT r) where
-    lift a = ReaderT $ const a
+    lift = ReaderT . const
 
 instance MonadIO m => MonadIO (ReaderT r m) where
     liftIO = lift . liftIO
